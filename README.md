@@ -70,3 +70,7 @@ The site follows the system light or dark setting. The button in the hero switch
 - `src/styles/system.css`: motion curves and shape outlines exported from the app's design system
 - `worker/`: the Cloudflare Worker serving the site and the waitlist API
 - `migrations/`: D1 schema migrations
+
+## License
+
+Copyright 2026 Lscythe. Licensed under the [Apache License 2.0](LICENSE). The license does not grant rights to the Jalvio name, logo or mascot (section 6).
