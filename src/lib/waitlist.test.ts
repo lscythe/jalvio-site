@@ -14,11 +14,11 @@ describe('isValidEmail', () => {
 describe('submitWaitlist', () => {
   afterEach(() => vi.unstubAllGlobals());
 
-  it('posts the trimmed email as JSON to the endpoint', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
+  it('posts the trimmed email as JSON to the site’s waitlist API', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 201 }));
     vi.stubGlobal('fetch', fetchMock);
 
-    await submitWaitlist('  rider@example.com ', '/api/waitlist');
+    await submitWaitlist('  rider@example.com ');
 
     expect(fetchMock).toHaveBeenCalledWith('/api/waitlist', {
       method: 'POST',
@@ -27,17 +27,9 @@ describe('submitWaitlist', () => {
     });
   });
 
-  it('rejects when the endpoint answers with an error status', async () => {
+  it('rejects when the API answers with an error status', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 500 })));
 
-    await expect(submitWaitlist('rider@example.com', '/api/waitlist')).rejects.toThrow('500');
-  });
-
-  it('resolves without a request when no endpoint is configured', async () => {
-    const fetchMock = vi.fn();
-    vi.stubGlobal('fetch', fetchMock);
-
-    await expect(submitWaitlist('rider@example.com', undefined)).resolves.toBeUndefined();
-    expect(fetchMock).not.toHaveBeenCalled();
+    await expect(submitWaitlist('rider@example.com')).rejects.toThrow('500');
   });
 });

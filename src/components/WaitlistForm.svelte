@@ -2,8 +2,6 @@
   import { isValidEmail, submitWaitlist } from '../lib/waitlist';
   import Mascot from './Mascot.svelte';
 
-  let { endpoint }: { endpoint?: string } = $props();
-
   type Status = 'editing' | 'invalid' | 'submitting' | 'failed' | 'joined';
 
   const HINTS: Record<Exclude<Status, 'joined'>, string> = {
@@ -25,7 +23,7 @@
     }
     status = 'submitting';
     try {
-      await submitWaitlist(email, endpoint);
+      await submitWaitlist(email);
       email = email.trim();
       status = 'joined';
     } catch {

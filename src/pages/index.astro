@@ -6,8 +6,6 @@ import ThemeToggle from '../components/ThemeToggle.svelte';
 import WaitlistForm from '../components/WaitlistForm.svelte';
 import Layout from '../layouts/Layout.astro';
 import { ARRIVALS, CROWD_MOODS, FAQ } from '../lib/content';
-
-const waitlistEndpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT;
 ---
 
 <Layout
@@ -30,7 +28,7 @@ const waitlistEndpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT;
           </header>
           <HeroLive client:load />
           <h1 class="display">Know when it comes. Know how full it is.</h1>
-          <WaitlistForm client:load endpoint={waitlistEndpoint} />
+          <WaitlistForm client:load />
         </div>
         <div class="hero-phone">
           <div class="phone-backdrop" aria-hidden="true">

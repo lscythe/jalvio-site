@@ -10,7 +10,7 @@ describe('WaitlistForm', () => {
   const joinButton = () => screen.getByRole('button', { name: 'Join the waitlist' });
 
   it('promises a single email before signup', () => {
-    render(WaitlistForm, { endpoint: '/api/waitlist' });
+    render(WaitlistForm);
 
     expect(screen.getByText('Free. One email when your invite is ready.')).toBeInTheDocument();
   });
@@ -19,7 +19,7 @@ describe('WaitlistForm', () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     const user = userEvent.setup();
-    render(WaitlistForm, { endpoint: '/api/waitlist' });
+    render(WaitlistForm);
 
     await user.type(emailField(), 'rider@nowhere');
     await user.click(joinButton());
@@ -30,7 +30,7 @@ describe('WaitlistForm', () => {
 
   it('clears the error once the rider edits the email', async () => {
     const user = userEvent.setup();
-    render(WaitlistForm, { endpoint: '/api/waitlist' });
+    render(WaitlistForm);
 
     await user.click(joinButton());
     await user.type(emailField(), 'r');
@@ -41,7 +41,7 @@ describe('WaitlistForm', () => {
   it('thanks the rider with Jali after a successful signup', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 201 })));
     const user = userEvent.setup();
-    render(WaitlistForm, { endpoint: '/api/waitlist' });
+    render(WaitlistForm);
 
     await user.type(emailField(), ' rider@example.com ');
     await user.keyboard('{Enter}');
@@ -53,7 +53,7 @@ describe('WaitlistForm', () => {
   it('keeps the form and explains when the signup fails', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 503 })));
     const user = userEvent.setup();
-    render(WaitlistForm, { endpoint: '/api/waitlist' });
+    render(WaitlistForm);
 
     await user.type(emailField(), 'rider@example.com');
     await user.click(joinButton());
