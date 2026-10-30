@@ -2,8 +2,23 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "jalvio-site",
   "compatibility_date": "2026-10-23",
-  // Static site: the Worker only serves the files Astro builds into dist/.
+  "main": "worker/index.ts",
+  // Astro builds the static site into dist/. Requests are served from it directly,
+  // except /api/*, which reaches the Worker.
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "jalvio-waitlist",
+      "database_id": "d0e6a771-84cd-459b-a9f6-c1aa0ad62510",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "observability": {
+    "enabled": true
   }
 }

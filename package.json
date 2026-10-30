@@ -8,12 +8,14 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check",
+    "check": "astro check && bun run check:worker",
+    "check:worker": "wrangler types worker/worker-configuration.d.ts && tsc -p worker/tsconfig.json",
+    "dev:worker": "astro build && wrangler d1 migrations apply jalvio-waitlist --local && wrangler dev",
     "lint": "biome check .",
     "format": "biome check --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "deploy": "astro build && wrangler deploy"
+    "deploy": "astro build && wrangler d1 migrations apply jalvio-waitlist --remote && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/svelte": "^9.1.2",
