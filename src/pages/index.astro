@@ -1,0 +1,779 @@
+---
+import BusPhone from '../components/BusPhone.svelte';
+import HeroLive from '../components/HeroLive.svelte';
+import Mascot from '../components/Mascot.svelte';
+import ThemeToggle from '../components/ThemeToggle.svelte';
+import WaitlistForm from '../components/WaitlistForm.svelte';
+import Layout from '../layouts/Layout.astro';
+import { ARRIVALS, CROWD_MOODS, FAQ } from '../lib/content';
+
+const waitlistEndpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT;
+---
+
+<Layout
+  title="Jalvio: live TransJakarta times and crowding"
+  description="Know when your bus comes and how full it is. Jalvio shows live TransJakarta arrivals with crowding reported by riders on board. Join the waitlist."
+>
+  <div class="page">
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <header class="brand-row">
+            <a class="wordmark" href="/" aria-label="Jalvio">
+              <span aria-hidden="true">jalvi</span>
+              <span class="wordmark-o"><Mascot tone="tertiary" size={28} /></span>
+            </a>
+            <div class="brand-actions">
+              <span class="waitlist-open"><span class="live-dot"></span>Waitlist open</span>
+              <ThemeToggle client:load />
+            </div>
+          </header>
+          <HeroLive client:load />
+          <h1 class="display">Know when it comes. Know how full it is.</h1>
+          <WaitlistForm client:load endpoint={waitlistEndpoint} />
+        </div>
+        <div class="hero-phone">
+          <div class="phone-backdrop" aria-hidden="true">
+            <div class="hero-blob hero-blob-cookie"></div>
+            <div class="hero-blob hero-blob-flower"></div>
+          </div>
+          <BusPhone client:visible />
+        </div>
+      </section>
+
+      <section class="bento" aria-label="What Jalvio does">
+        <article class="tile tile-live">
+          <span class="icon tile-icon" aria-hidden="true">directions_bus</span>
+          <h2 class="display">Live on the map</h2>
+          <p>Watch your bus move toward the stop, and see the next two behind it.</p>
+          <ul class="arrivals" aria-label="Example arrivals at Bundaran HI">
+            {
+              ARRIVALS.map((arrival) => (
+                <li>
+                  <span class="route-badge" style={{ background: arrival.badgeBackground, color: arrival.badgeForeground }}>
+                    <span class="visually-hidden">Route </span>
+                    {arrival.route}
+                  </span>
+                  <span class="arrival-text">
+                    <span class="arrival-to">{arrival.destination}</span>
+                    <span class="crowd-chip" style={{ background: arrival.crowd.background, color: arrival.crowd.foreground }}>
+                      <span class="icon" aria-hidden="true">{arrival.crowd.icon}</span>
+                      {arrival.crowd.label}
+                    </span>
+                  </span>
+                  <span class="arrival-eta display">{arrival.minutes}</span>
+                  <span class="arrival-unit">min</span>
+                </li>
+              ))
+            }
+          </ul>
+        </article>
+
+        <article class="tile tile-alerts">
+          <span class="icon tile-icon" aria-hidden="true">notifications</span>
+          <h2 class="display">Leave on time</h2>
+          <p>Turn on alerts for a bus and Jalvio tells you when to start walking to the stop.</p>
+          <div class="alert-card">
+            <Mascot mood="late" size={44} />
+            <span class="display-wide">Leave now. Bus 1 is 4 min away</span>
+          </div>
+        </article>
+
+        <article class="tile tile-visitors">
+          <div class="tile-copy">
+            <span class="icon tile-icon" aria-hidden="true">travel_explore</span>
+            <h2 class="display">New in town?</h2>
+            <p>Search a place by name. Jalvio walks you to the stop and tells you where to get off.</p>
+          </div>
+          <div class="visitor-jali"><Mascot mood="home" size={120} /></div>
+        </article>
+      </section>
+
+      <section class="jali" aria-labelledby="jali-title">
+        <div class="jali-intro">
+          <h2 id="jali-title" class="display">Meet Jali. It knows how full your bus is.</h2>
+          <p>Riders on board tap how crowded the bus is, and Jali changes shape to match. Round means seats. Spiky means you might want the next one.</p>
+        </div>
+        <ul class="moods">
+          {
+            CROWD_MOODS.map((crowd) => (
+              <li
+                class="mood"
+                style={{
+                  background: crowd.background,
+                  color: crowd.foreground,
+                  '--jali-card': `light-dark(var(--primary), ${crowd.foreground})`,
+                  '--on-jali-card': `light-dark(var(--on-primary), ${crowd.background})`,
+                }}
+              >
+                <Mascot mood={crowd.mood} tone="card" size={88} />
+                <h3 class="display-wide">{crowd.name}</h3>
+                <p class="mood-meaning">{crowd.meaning}</p>
+                <p class="mood-says">“{crowd.says}”</p>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title" class="display">Good to know</h2>
+        <div class="faq-list">
+          {
+            FAQ.map((item, i) => (
+              <details name="faq" open={i === 0}>
+                <summary>
+                  <span>{item.question}</span>
+                  <span class="icon outlined chevron" aria-hidden="true">expand_more</span>
+                </summary>
+                <p>{item.answer}</p>
+              </details>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+
+    <footer class="cta">
+      <Mascot mood="home" tone="container" size={96} />
+      <div class="cta-copy">
+        <h2 class="display">Coming to Android and iPhone</h2>
+        <p>Waitlist members get the first invites.</p>
+      </div>
+      <ul class="stores" aria-label="Coming soon to">
+        <li class="store store-play"><span class="icon" aria-hidden="true">android</span>Google Play</li>
+        <li class="store store-apple">
+          <svg class="apple-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"></path>
+          </svg>
+          App Store
+        </li>
+      </ul>
+    </footer>
+  </div>
+</Layout>
+
+<script>
+  import { enhanceAccordion } from '../lib/accordion';
+
+  const faq = document.querySelector<HTMLElement>('.faq-list');
+  if (faq) enhanceAccordion(faq);
+</script>
+
+<style>
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--gutter);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Hero */
+
+  .hero {
+    border-radius: 32px 32px 8px 8px;
+    background: var(--hero);
+    color: var(--on-hero);
+    padding: 20px 36px 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 40px;
+    overflow: hidden;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-bottom: 48px;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 48px;
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: center;
+    font: 700 30px/1 'Fredoka', sans-serif;
+    letter-spacing: -0.02em;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .wordmark:hover {
+    color: inherit;
+  }
+
+  .wordmark-o {
+    margin: 4px 0 0 1px;
+  }
+
+  .brand-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .waitlist-open {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .waitlist-open .live-dot {
+    background: var(--t70);
+  }
+
+  h1 {
+    max-width: 620px;
+    font-size: clamp(44px, 4vw + 14px, 64px);
+  }
+
+  /* Shows the top of the 760px phone (plus its 8px bezel) and crops the rest. */
+  .hero-phone {
+    --shown-height: 700px;
+    --phone-toast-bottom: calc(768px - var(--shown-height) + 24px);
+    position: relative;
+    align-self: end;
+    width: 376px;
+    height: var(--shown-height);
+    padding: 8px 8px 0;
+    /* Crop only the bottom of the phone; the shapes behind it may spill sideways into the hero. */
+    clip-path: inset(-400px -400px 0 -400px);
+  }
+
+  .phone-backdrop {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    width: 360px;
+    height: 760px;
+  }
+
+  /* Feature tiles */
+
+  .bento {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 3fr);
+    gap: 4px;
+  }
+
+  .tile {
+    --icon-size: 28px;
+    border-radius: 8px;
+    background: var(--card);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tile-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tile-icon {
+    color: var(--primary);
+  }
+
+  .tile h2 {
+    font-size: clamp(40px, 2vw + 22px, 48px);
+  }
+
+  .tile p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--on-surface-variant);
+    text-wrap: pretty;
+  }
+
+  .arrivals {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .arrivals li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 6px;
+    background: var(--card-inset);
+    padding: 10px 14px 10px 10px;
+  }
+
+  .arrivals li:first-child {
+    border-radius: 24px 24px 6px 6px;
+  }
+
+  .arrivals li:last-child {
+    border-radius: 6px 6px 24px 24px;
+  }
+
+  .route-badge {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 850;
+    font-stretch: 40%;
+    font-size: 22px;
+  }
+
+  .arrival-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .arrival-to {
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .crowd-chip {
+    --icon-size: 14px;
+    align-self: flex-start;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 0 7px 0 4px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .arrival-eta {
+    font-size: 32px;
+    line-height: 0.85;
+    color: var(--primary);
+  }
+
+  .arrival-unit {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .alert-card {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 28px;
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    font-size: 22px;
+  }
+
+  .tile-visitors {
+    justify-content: space-between;
+    background: var(--secondary-container);
+    color: var(--on-secondary-container);
+  }
+
+  .tile-visitors .tile-icon,
+  .tile-visitors p {
+    color: inherit;
+  }
+
+  .visitor-jali {
+    align-self: center;
+  }
+
+  /* Jali and crowd moods */
+
+  .jali {
+    border-radius: 8px;
+    background: var(--spotlight);
+    color: var(--on-tertiary-container);
+    padding: 56px 36px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .jali-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 40px;
+    align-items: end;
+  }
+
+  .jali-intro h2 {
+    font-size: clamp(52px, 6vw + 20px, 96px);
+    line-height: 0.84;
+  }
+
+  .jali-intro p {
+    font-size: 18px;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  .moods {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .mood {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    border-radius: 8px;
+    /* A light seam between cards in light mode; in dark mode the section color shows through instead. */
+    box-shadow: 0 0 0 2px light-dark(var(--card), var(--spotlight));
+  }
+
+  .mood:first-child {
+    border-radius: 28px 8px 8px 28px;
+  }
+
+  .mood:last-child {
+    border-radius: 8px 28px 28px 8px;
+  }
+
+  .mood h3 {
+    font-size: 32px;
+    line-height: 0.9;
+  }
+
+  .mood-meaning {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .mood-says {
+    font-size: 15px;
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  /* FAQ */
+
+  .faq {
+    border-radius: 8px;
+    background: var(--card);
+    padding: 48px 36px;
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 40px;
+  }
+
+  .faq h2 {
+    font-size: clamp(48px, 3vw + 26px, 64px);
+    line-height: 0.86;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  details {
+    border-radius: 6px;
+    background: var(--card-inset);
+    transition: border-radius 394ms var(--sf);
+  }
+
+  details:first-child {
+    border-radius: 24px 24px 6px 6px;
+  }
+
+  details:last-child {
+    border-radius: 6px 6px 24px 24px;
+  }
+
+  /* .closing is set by the accordion script while an item collapses, so the shape eases back right away. */
+  details[open]:not(.closing) {
+    border-radius: 28px;
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 22px;
+    font-weight: 700;
+    font-size: 17px;
+    cursor: pointer;
+    list-style: none;
+    border-radius: inherit;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary span:first-child {
+    flex: 1;
+  }
+
+  .chevron {
+    transition: transform 394ms var(--sf);
+  }
+
+  details[open]:not(.closing) .chevron {
+    transform: rotate(180deg);
+  }
+
+  details p {
+    padding: 0 22px 18px;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--on-surface-variant);
+    text-wrap: pretty;
+    transition: opacity 200ms var(--fd);
+  }
+
+  details[open]:not(.closing) p {
+    animation: fade 300ms var(--fd) both;
+  }
+
+  details.closing p {
+    opacity: 0;
+  }
+
+  /* Closing call to action */
+
+  .cta {
+    border-radius: 8px 8px 32px 32px;
+    background: var(--cta);
+    color: var(--on-cta);
+    padding: 40px 36px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  .cta-copy {
+    flex: 1;
+    min-width: min(300px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cta h2 {
+    font-size: clamp(44px, 2vw + 30px, 56px);
+  }
+
+  .cta p {
+    font-size: 17px;
+    opacity: 0.9;
+  }
+
+  .stores {
+    --icon-size: 26px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 4px;
+  }
+
+  .store {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 22px 0 16px;
+    font-weight: 800;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .store-play {
+    border-radius: 30px 10px 10px 30px;
+    background: var(--on-cta);
+    color: var(--cta);
+  }
+
+  .store-apple {
+    border-radius: 10px 30px 30px 10px;
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .apple-logo {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    margin: -2px 2px 0;
+  }
+
+  /* Layout adjustments for smaller screens */
+
+  @media (max-width: 1100px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .hero-copy {
+      padding-bottom: 40px;
+    }
+
+    .hero-phone {
+      --shown-height: 600px;
+      justify-self: center;
+    }
+
+    .bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tile-visitors {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .moods {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mood:nth-child(n) {
+      border-radius: 8px;
+    }
+
+    .mood:nth-child(1) {
+      border-radius: 28px 8px 8px 8px;
+    }
+
+    .mood:nth-child(2) {
+      border-radius: 8px 28px 8px 8px;
+    }
+
+    .mood:nth-child(3) {
+      border-radius: 8px 8px 8px 28px;
+    }
+
+    .mood:nth-child(4) {
+      border-radius: 8px 8px 28px 8px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .jali-intro,
+    .faq {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .page {
+      --gutter: 8px;
+    }
+
+    .hero {
+      border-radius: 28px 28px 8px 8px;
+      padding: 16px 16px 0;
+    }
+
+    .hero-copy {
+      gap: 32px;
+    }
+
+    .bento {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tile,
+    .jali,
+    .faq,
+    .cta {
+      padding: 32px 16px;
+    }
+
+    .tile-visitors {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .jali {
+      padding-top: 40px;
+    }
+
+    .moods {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mood:nth-child(n) {
+      border-radius: 8px;
+    }
+
+    .mood:first-child {
+      border-radius: 28px 28px 8px 8px;
+    }
+
+    .mood:last-child {
+      border-radius: 8px 8px 28px 28px;
+    }
+
+    summary {
+      padding: 16px 18px;
+      font-size: 16px;
+    }
+
+    details p {
+      padding: 0 18px 16px;
+    }
+
+    .cta {
+      border-radius: 8px 8px 28px 28px;
+    }
+
+    .stores {
+      flex-wrap: wrap;
+    }
+  }
+
+  /* The phone mockup is a fixed 360px device; shrink it on narrow screens instead of cropping it sideways. */
+  @media (max-width: 440px) {
+    .hero-phone {
+      zoom: 0.82;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .hero-phone {
+      zoom: 0.72;
+    }
+  }
+</style>

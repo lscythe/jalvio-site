@@ -1,0 +1,286 @@
+/*
+ * Palette roles (--primary, --surface, ...) are generated from the brand colors in src/lib/theme.ts
+ * as light-dark() pairs, so the theme follows color-scheme: the system by default, or the
+ * data-theme override set by the theme toggle.
+ */
+:root {
+  color-scheme: light dark;
+
+  --busy: light-dark(oklch(60% 0.13 80), oklch(76% 0.13 85));
+  --busy-container: light-dark(oklch(92% 0.08 90), oklch(32% 0.06 85));
+  --on-busy-container: light-dark(oklch(28% 0.07 80), oklch(92% 0.07 90));
+  --standing: light-dark(oklch(60% 0.16 50), oklch(73% 0.15 52));
+  --standing-container: light-dark(oklch(89% 0.09 55), oklch(33% 0.07 50));
+  --on-standing-container: light-dark(oklch(28% 0.08 45), oklch(91% 0.07 55));
+
+  --gutter: 12px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--on-surface);
+  font-family: "Roboto Flex", system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  color: var(--p30);
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--p60);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.icon {
+  flex: none;
+  width: var(--icon-size, 24px);
+  height: var(--icon-size, 24px);
+  overflow: hidden;
+  /* biome-ignore lint/a11y/useGenericFontNames: a text fallback would render the ligature names (e.g. "notifications") instead of icons */
+  font-family: "Material Symbols Rounded";
+  font-size: var(--icon-size, 24px);
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  white-space: nowrap;
+  font-variation-settings: "FILL" 1;
+  user-select: none;
+}
+
+.icon.outlined {
+  font-variation-settings: "FILL" 0;
+}
+
+.display {
+  font-weight: 850;
+  font-stretch: 28%;
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+.display-wide {
+  font-weight: 850;
+  font-stretch: 40%;
+  line-height: 1.05;
+}
+
+/*
+ * Spinning shapes behind the app preview's header, positioned in a 360px-wide phone box.
+ * The page draws a second copy behind the phone with the same geometry, so the shapes
+ * appear to pass under the bezel and continue into the hero.
+ */
+.hero-blob {
+  position: absolute;
+  background: currentColor;
+  pointer-events: none;
+}
+
+.hero-blob-cookie {
+  right: -70px;
+  top: 60px;
+  width: 260px;
+  height: 260px;
+  opacity: 0.1;
+  clip-path: var(--cookie);
+  animation: spin 40s linear infinite;
+}
+
+.hero-blob-flower {
+  right: 120px;
+  top: -50px;
+  width: 120px;
+  height: 120px;
+  opacity: 0.07;
+  clip-path: var(--flower);
+  animation: spin 30s linear infinite reverse;
+}
+
+.live-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: live 1.6s infinite;
+}
+
+@keyframes live {
+  50% {
+    opacity: 0.25;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes up {
+  from {
+    transform: translateY(24px);
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes bob {
+  0% {
+    transform: scale(0.4) rotate(-20deg);
+  }
+  60% {
+    transform: scale(1.25) rotate(8deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+@keyframes drain {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+@keyframes cd-in {
+  from {
+    transform: translateY(70%) scale(0.8);
+    opacity: 0;
+  }
+}
+@keyframes cd-out {
+  to {
+    transform: translateY(-70%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes mm-breathe {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.035, 0.965);
+  }
+}
+@keyframes mm-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes mm-squish {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.06, 0.93);
+  }
+}
+@keyframes mm-hop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  30% {
+    transform: translateY(-9px) scale(0.95, 1.05);
+  }
+  55% {
+    transform: translateY(0) scale(1.07, 0.93);
+  }
+  70% {
+    transform: scale(1, 1);
+  }
+}
+@keyframes mm-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-2px) rotate(-2deg);
+  }
+  30% {
+    transform: translateX(2px) rotate(2deg);
+  }
+  45% {
+    transform: translateX(-1px);
+  }
+  60% {
+    transform: translateX(0);
+  }
+}
+@keyframes mm-blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore-start lint/complexity/noImportantStyles: reduced motion has to win over every component's own animation rules */
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    /* biome-ignore-end lint/complexity/noImportantStyles: reduced motion has to win over every component's own animation rules */
+  }
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Jalvio</title>
+  <rect width="64" height="64" rx="18" fill="#2f5c9e"/>
+  <circle cx="32" cy="34" r="20" fill="#d7e3ff"/>
+  <rect x="22.5" y="28" width="5" height="11" rx="2.5" fill="#0d1d3a"/>
+  <rect x="36.5" y="28" width="5" height="11" rx="2.5" fill="#0d1d3a"/>
+</svg>

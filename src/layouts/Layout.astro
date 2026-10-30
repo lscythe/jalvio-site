@@ -1,0 +1,49 @@
+---
+import '../styles/system.css';
+import '../styles/global.css';
+import { THEME_STORAGE_KEY } from '../lib/colorScheme';
+import { buildScheme, JALVIO_PALETTE, lightDarkCss } from '../lib/theme';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const themeCss = `:root{${lightDarkCss(buildScheme(JALVIO_PALETTE, 'light'), buildScheme(JALVIO_PALETTE, 'dark'))}}`;
+
+const TEXT_FONTS =
+  'https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Geist+Mono:wght@500&display=swap';
+// Only the glyphs the page uses (names must stay alphabetical). Blocking avoids flashing the ligature names.
+const ICON_FONT =
+  'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=android,arrow_back,close,dark_mode,directions_bus,event_seat,expand_more,groups,light_mode,notifications,notifications_active,person,route,travel_explore&display=block';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline define:vars={{ storageKey: THEME_STORAGE_KEY }}>
+      // Apply a saved theme override before first paint so the page never flashes the wrong theme.
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+      } catch {}
+    </script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href={TEXT_FONTS} />
+    <link rel="stylesheet" href={ICON_FONT} />
+    <style is:inline set:html={themeCss}></style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
