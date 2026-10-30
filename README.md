@@ -41,6 +41,8 @@ The repository needs two secrets:
 
 The deploy job runs in the `production` environment, so protection rules set on that environment in GitHub apply.
 
+Dependabot (`.github/dependabot.yml`) opens update PRs every Monday: minor and patch bumps grouped (Astro and Svelte together, dev tooling together, all GitHub Actions together), and each major bump in its own PR.
+
 ## Waitlist API
 
 The site and its API are one Cloudflare Worker (`worker/`). Static files are served straight from `dist/`; only `/api/*` reaches the Worker code.
