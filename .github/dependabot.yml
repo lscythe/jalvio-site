@@ -18,6 +18,10 @@ updates:
       tooling:
         dependency-type: development
         update-types: [minor, patch]
+    ignore:
+      # `astro check` refuses TypeScript 7. Lift this once @astrojs/check supports it.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
