@@ -47,7 +47,8 @@ jobs:
   deploy:
     name: Deploy to Cloudflare Workers
     needs: verify
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Manual runs on main also deploy: merges made by the Dependabot auto-merge workflow don't trigger push runs.
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     environment:
       name: production
