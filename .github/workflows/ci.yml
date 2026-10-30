@@ -37,8 +37,6 @@ jobs:
 
       - name: Build
         run: bun run build
-        env:
-          PUBLIC_WAITLIST_ENDPOINT: ${{ vars.PUBLIC_WAITLIST_ENDPOINT }}
 
       - uses: actions/upload-artifact@v4
         with:
@@ -78,4 +76,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: bun
-          command: deploy
+          # Schema changes land before the code that needs them.
+          command: |
+            d1 migrations apply jalvio-waitlist --remote
+            deploy
