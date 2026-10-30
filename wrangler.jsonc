@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "jalvio-site",
+  "compatibility_date": "2026-10-23",
+  // Static site: the Worker only serves the files Astro builds into dist/.
+  "assets": {
+    "directory": "./dist"
+  }
+}
