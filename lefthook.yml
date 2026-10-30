@@ -1,0 +1,16 @@
+# Git hooks, installed by `bun install` (see the `prepare` script). https://lefthook.dev/configuration/
+
+pre-commit:
+  jobs:
+    - name: biome
+      glob: "*.{js,mjs,cjs,ts,json,jsonc,css,astro,svelte,md,yml,yaml}"
+      run: bunx biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  jobs:
+    - name: typecheck
+      run: bun run check
+    - name: test
+      run: bun run test
